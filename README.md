@@ -1,149 +1,195 @@
 # Automatic Detection of Heavy Vehicles and Trailers During Peak‑Hour Ban Periods
 
-This repository contains a training exercise that uses computer vision to **automatically detect heavy vehicles (trucks, buses, trailers)** on highways and major roads during peak‑hour ban periods. The goal is to support traffic monitoring and help authorities enforce restrictions on heavy vehicles to **reduce congestion and avoid traffic jams** during rush hours.
+This repository contains a training exercise that uses computer vision to **automatically detect heavy vehicles (trucks, buses, trailers)** on highways and major urban corridors during peak‑hour ban periods. The project is framed as a small **urban planning and traffic management case study**, showing how AI can support city authorities in reducing congestion and improving traffic flow during rush hours.
 
 ---
 
-## 1. Problem Statement
+## 1. Urban Planning Context
 
-In many cities and highway networks, heavy vehicles are restricted or banned during specific **peak‑hour windows** to ease congestion and improve travel times. Manual monitoring of these rules using CCTV or roadside cameras is time‑consuming and unreliable.
+Many cities apply **time‑based restrictions** on heavy vehicles (e.g., morning and evening peak‑hour bans) to:
 
-This project explores how an **object detection model** can automatically:
+- Reduce congestion on key corridors.
+- Improve travel times for commuters and public transport.
+- Enhance safety and reduce conflicts between freight and passenger traffic.
 
-- Detect heavy vehicles (trucks, trailers, buses) on highways and major roads.  
-- Operate on images representative of **rush hour / peak traffic**.  
-- Provide a foundation for future systems that could trigger alerts when banned vehicles are present during restricted hours.
+However, these policies are often **hard to monitor** in real time. Manual checks by enforcement teams or occasional camera reviews are not enough to understand:
+
+- How often heavy‑vehicle bans are actually violated.
+- On which **roads and time windows** violations are concentrated.
+- Whether the restrictions are really helping to **ease congestion**.
+
+This project demonstrates how an **object detection model** can be a building block in a **smart urban traffic management system**, by automatically detecting heavy vehicles and trailers in peak‑hour traffic images.
 
 ---
 
-## 2. Objectives
+## 2. Problem Statement
 
-- Build a small but focused dataset of **traffic images** from highways and major roads, with visible heavy vehicles and mixed traffic.
-- Annotate each image with bounding boxes and labels for:
-  - `car`
+The core problem addressed is:
+
+> How can we automatically detect heavy vehicles and trailers on urban highways and major roads during peak‑hour ban periods, to support monitoring, enforcement, and better urban traffic planning?
+
+The exercise focuses on:
+
+- Visual detection of heavy vehicles and trailers from camera images.
+- Situations that mimic **rush hour** and high‑demand conditions.
+- A pipeline that could, in a real deployment, feed data to planners and operators.
+
+---
+
+## 3. Objectives
+
+Urban‑planning oriented objectives:
+
+- Build a focused dataset of **traffic scenes from urban highways and main arterial roads** with mixed traffic.
+- Annotate and train a model to detect:
+  - `car` (background / comparison class)
   - `truck`
   - `bus`
-  - `trailer` (or `truck_with_trailer` / `car_trailer`, depending on labeling scheme)
-- Train an object detection model (via Roboflow / YOLO) to recognize these classes.
-- Evaluate the model’s performance and discuss how it could be used to **monitor peak‑hour bans** and help avoid traffic jams.
+  - `trailer` (or `truck_with_trailer` / `car_trailer`)
+- Use the trained model to **estimate where and when heavy vehicles appear** in traffic images captured during typical peak hours.
+- Discuss how such a system could:
+  - Support **enforcement** of heavy‑vehicle bans.
+  - Provide **evidence and statistics** for urban planners (e.g., corridors with frequent violations, before/after analysis of a policy).
 
 ---
 
-## 3. Dataset Description
+## 4. Dataset Description
 
-### 3.1 Source of Images
+### 4.1 Urban Traffic Focus
 
-The images used in this exercise are collected from **open, license‑friendly sources** (e.g., free stock image sites) and/or small public traffic datasets. The focus is on:
+The dataset is designed to reflect **urban mobility conditions**, not just generic driving scenes. Images are chosen to:
 
-- **Highways and major roads** with multiple lanes.  
-- Scenes with **mixed traffic**: cars, trucks, buses, and sometimes trailers.  
-- Images that resemble **rush‑hour conditions** or dense traffic flow (potential traffic jams).
+- Show **multi‑lane highways, ring roads, and major arterials** that connect or cross urban areas.
+- Include **mixed traffic**: private cars, trucks, buses, and occasionally trailers.
+- Represent **busy/peak‑hour situations**, with moderate to dense traffic that could lead to congestion or jams.
 
-> Note: If you clone this repository, check the `data/` folder or dataset links in this README to understand the exact image sources and licenses.
+Sources can include:
 
-### 3.2 Classes
+- Open, license‑friendly stock images (e.g., highway traffic, rush hour, traffic jams).
+- Small open datasets that provide traffic or surveillance views on major roads.
 
-The following object classes are used:
+All sources should be documented in a `data/dataset_info.md` file with links and licensing notes.
 
-- `car` – standard passenger vehicles.  
-- `truck` – heavy trucks and lorries.  
-- `bus` – public transport and coach buses.  
-- `trailer` – articulated trucks or vehicles with trailers (can also be named `truck_with_trailer` / `car_trailer` depending on labeling).
+### 4.2 Classes
 
-You can adapt or merge these labels depending on your use case (for example, merging `truck` and `trailer` into a single `heavy_vehicle` class).
+The following object classes are used, chosen for their relevance to urban planning and freight policy:
 
-### 3.3 Dataset Size and Splits
+- `car` – private passenger vehicles.
+- `truck` – heavy goods vehicles / lorries.
+- `bus` – public transport and coach buses.
+- `trailer` – articulated trucks or vehicles with trailers  
+  (in some setups this class may be named `truck_with_trailer` or `car_trailer`).
 
-For this assignment, the dataset is intentionally kept small but balanced:
+Optionally, classes can be aggregated into:
+
+- `heavy_vehicle` (for all trucks and trailers)
+- `public_transport` (for buses)
+
+depending on the analysis needs.
+
+### 4.3 Dataset Size and Splits
+
+The dataset is intentionally **modest** in size, suitable for a course assignment:
 
 - Total images: ~150–300  
 - Train: ~70%  
 - Validation: ~20%  
 - Test: ~10%  
 
-Each split contains a mix of scenes and classes, with a focus on having **enough examples of heavy vehicles** in different positions, scales, and lighting conditions.
+Each split contains a mix of:
+
+- Different viewpoints (side, slight aerial, overpass).
+- Varying traffic densities (free flow to near‑jam).
+- Multiple appearances of heavy vehicles when possible.
 
 ---
 
-## 4. Annotation and Preprocessing
+## 5. Annotation and Preprocessing
 
-### 4.1 Annotation
+### 5.1 Annotation
 
-Images are annotated using **bounding boxes** around each vehicle instance. An annotation tool (e.g., Roboflow) is used to:
+Images are annotated with **bounding boxes** for each visible vehicle:
 
-- Draw a bounding box around each `car`, `truck`, `bus`, and `trailer`.  
-- Assign the correct class label.  
-- Export the dataset in a detection‑compatible format (e.g., YOLO, COCO, or VOC).
+- Draw a bounding box around each `car`, `truck`, `bus`, and `trailer`.
+- Label consistently according to the chosen class list.
+- Export to a detection‑friendly format (e.g., YOLO, COCO, or Pascal VOC).
 
-### 4.2 Preprocessing and Augmentation
+Consistent labeling is important so that planners can trust the counts and class breakdowns in later analysis.
 
-Before training, the dataset is processed with standard steps:
+### 5.2 Preprocessing and Augmentation
 
-- **Resize** images to a fixed resolution (e.g., 640×640).  
-- **Normalize** pixel values as required by the chosen model.  
-- Apply basic **data augmentation** to improve robustness:
-  - Random horizontal flip.  
-  - Random brightness/contrast changes.  
-  - Slight rotation or scaling.  
+To improve robustness to real‑world conditions (different cameras, weather, and lighting):
 
-These augmentations help the model generalize to different perspectives, lighting conditions, and camera setups.
+- **Resize** all images to a fixed resolution (e.g., 640×640).
+- **Normalize** pixel values according to the model framework.
+- Apply basic **augmentations**:
+  - Horizontal flips (for different flow directions).
+  - Brightness/contrast changes (day / evening / overcast).
+  - Small rotations/crops (camera mounting differences).
 
----
-
-## 5. Model Training
-
-This exercise uses an object detection model (e.g., YOLO‑based) trained via an online platform (such as Roboflow) or locally.
-
-Typical training configuration:
-
-- Task: **Object Detection**  
-- Classes: `car`, `truck`, `bus`, `trailer`  
-- Input size: 416×416 or 640×640  
-- Epochs: ~50–100 (depending on dataset size and convergence)  
-- Evaluation metrics:
-  - mAP (mean Average Precision)  
-  - Precision and recall per class  
-
-After training, the model can be:
-
-- Evaluated on the **test set**.  
-- Tested on new highway / rush‑hour images to visually inspect its predictions.
+These steps help simulate the variability in actual **urban surveillance cameras**.
 
 ---
 
-## 6. Use Case: Monitoring Peak‑Hour Ban Periods
+## 6. Model Training
 
-In a real deployment, the trained model could be integrated with:
+The project trains an **object detection model** (e.g., a YOLO variant) using the annotated dataset.
 
-- **CCTV or roadside cameras** on highways and major roads.  
-- A system that knows the **current time and restricted hours**.  
+Typical configuration:
 
-The workflow could be:
+- Task: Object Detection
+- Classes: `car`, `truck`, `bus`, `trailer`
+- Input size: 416×416 or 640×640
+- Epochs: ~50–100 (depending on convergence)
+- Metrics:
+  - mAP (mean Average Precision)
+  - Precision and recall per class
+  - Qualitative inspection of predictions on **peak‑like traffic scenes**
 
-1. Capture frames from traffic cameras during peak hours.  
-2. Run the detection model to identify `truck`, `bus`, and `trailer`.  
-3. If heavy vehicles are detected during a **ban window**, the system could:
-   - Log the event.  
-   - Trigger an alert to operators.  
-   - Provide visual evidence (image with bounding boxes).
-
-This assignment demonstrates the **computer vision component** of such a system: the ability to detect heavy vehicles in traffic scenes automatically.
+Training can be done on a cloud training platform or locally; the exact setup should be documented in `notebooks/` or a training script if included.
 
 ---
 
-## 7. Repository Structure
+## 7. Urban Planning Use Case & Case Study Angle
 
-Example structure (adjust to match your actual files):
+This project can be described as a **prototype module** in a broader **Urban Traffic Management** or **Intelligent Transport System**. In a realistic deployment, the workflow might be:
+
+1. **Cameras** on key urban corridors (ring roads, radial arterials, highway segments connecting to the city) capture frames during the day.
+2. During defined **peak‑hour ban periods** (e.g., 7:00–9:00 and 16:30–18:30), the detection model runs on incoming frames.
+3. For each frame or time window, the system counts:
+   - Number of `truck`, `bus`, `trailer` detections.
+   - Spatial distribution (which camera / corridor).
+4. The results feed into:
+   - A **dashboard** for operators (live or near‑real time alerts for violations).
+   - **Daily/weekly statistics** for urban planners and policy makers, such as:
+     - Corridors with the highest number of heavy vehicles during restricted hours.
+     - Trends before and after the introduction of a new ban.
+     - Evidence to adjust restriction times or designate alternative freight routes.
+
+In your report, you can treat this as a **small case study** showing how:
+
+- AI helps bridge the gap between **policy on paper** and **actual behavior on the network**.
+- Planners and traffic engineers can base decisions on **measured data** about heavy‑vehicle presence during peak periods.
+- Future work could integrate travel‑time, congestion, and safety metrics for a more complete planning tool.
+
+---
+
+## 8. Repository Structure
+
+Example structure (adapt as needed):
 
 ```text
 .
 ├── data/
-│   ├── images/          # Raw or processed images
-│   ├── labels/          # Annotation files (YOLO/COCO/VOC)
-│   └── dataset_info.md  # Notes about sources, licensing, and splits
+│   ├── images/             # Traffic images (urban highways & major roads)
+│   ├── labels/             # Bounding box annotations
+│   └── dataset_info.md     # Sources, licenses, class definitions, split info
 ├── notebooks/
-│   └── training.ipynb   # Optional: example training notebook (if used)
+│   └── training.ipynb      # Optional: training / evaluation notebook
 ├── models/
-│   └── best_model.*     # Exported trained model (if shared)
-├── README.md            # This file
-└── requirements.txt     # Dependencies (if local training/inference is included)
+│   └── best_model.*        # Exported trained model (if shared)
+├── src/
+│   ├── prepare_data.py     # (Optional) data prep scripts
+│   └── infer.py            # (Optional) inference script on new images
+├── README.md               # This file
+└── requirements.txt        # Dependencies (if local code is included)
