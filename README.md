@@ -1,0 +1,2 @@
+# Automatic Detection of Heavy Vehicles and Trailers During Peak‑Hour Ban Periods
+his repository contains a training exercise that uses computer vision to **automatically detect heavy vehicles (trucks, buses, trailers)** on highways and major roads during peak‑hour ban periods. The goal is to support traffic monitoring and help authorities enforce restrictions on heavy vehicles to **reduce congestion and avoid traffic jams** during rush hours.
