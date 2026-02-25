@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 3
+names: ['Car', 'Trucks', 'bus']
+
+roboflow:
+  workspace: salem-w0yva
+  project: test_01-9ozqp
+  version: 1
+  license: Private
+  url: https://app.roboflow.com/salem-w0yva/test_01-9ozqp/1
