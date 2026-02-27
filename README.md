@@ -94,10 +94,10 @@ The repo uses **two notebooks** — run them in order:
 
 | Metric | Value |
 |--------|-------|
-| Precision | _TBD_ |
-| Recall | _TBD_ |
-| mAP@0.5 | _TBD_ |
-| mAP@0.5:0.95 | _TBD_ |
+| Precision | 0.6329 |
+| Recall | 0.5987 |
+| mAP@0.5 | 0.6011 |
+| mAP@0.5:0.95 |  0.4486 |
 
 **Key takeaways (draft — update after training):**
 1. `truck` class is expected to be hardest due to heavy occlusion and scale variation.
