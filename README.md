@@ -67,6 +67,21 @@ The dataset `data.yaml` contains **5 class entries** due to capitalisation incon
 
 > The dataset is stored directly in this repository under `images dataset/`. The notebooks clone the repo automatically — **no Roboflow account or API key required**.
 
+<details>
+<summary>Alternative: download directly from Roboflow</summary>
+
+```python
+!pip install roboflow
+
+from roboflow import Roboflow
+rf = Roboflow(api_key="p0kVlEmfrVH2pFtkAO76")
+project = rf.workspace("salem-w0yva").project("automatic-detection-of-heavy-vehicles-and-trailers-during-peak-hour-ban-periods")
+version = project.version(1)
+dataset = version.download("yolov8")
+```
+
+</details>
+
 ---
 
 ## Quick Start — How to Reproduce (Google Colab)
@@ -184,11 +199,3 @@ Training curves and prediction samples are in [`/results/`](./results/).
 - Dataset: **CC BY 4.0** (hosted in this repo; originally from Roboflow Smart City Cars Detection v1)
 - See [`/docs/governance_checklist.md`](./docs/governance_checklist.md) for full compliance notes.
 
----
-
-## References
-
-- Jocher, G. et al. (2023). *Ultralytics YOLOv8*. [https://github.com/ultralytics/ultralytics](https://github.com/ultralytics/ultralytics)
-- Roboflow (2026). *Smart City Cars Detection Dataset v1*. CC BY 4.0. Hosted at: [/images dataset/](https://github.com/archsalem101/Automatic-Detection-of-Heavy-Vehicles-and-Trailers-During-Peak-Hour-Ban-Periods/tree/main/images%20dataset)
-- MAICEN 1125 Lecture Notes — Module 4, Unit 3 (LS2, LS3, LS4).
-- Ultralytics Colab Reference Notebook: [https://colab.research.google.com/drive/1CFqZ75Hxgjvt6p5Pv713H_3-V73cQIbD](https://colab.research.google.com/drive/1CFqZ75Hxgjvt6p5Pv713H_3-V73cQIbD)
