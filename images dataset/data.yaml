@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 5
+names: ['Car', 'Trucks', 'bus', 'car', 'truck']
+
+roboflow:
+  workspace: salem-w0yva
+  project: automatic-detection-of-heavy-vehicles-and-trailers-during-peak-hour-ban-periods
+  version: 1
+  license: CC BY 4.0
+  url: https://app.roboflow.com/salem-w0yva/automatic-detection-of-heavy-vehicles-and-trailers-during-peak-hour-ban-periods/1
