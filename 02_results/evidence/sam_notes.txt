@@ -1,0 +1,20 @@
+
+SAM Exploration — Qualitative Notes
+=====================================
+Tool          : Ultralytics SAM (sam_b.pt)
+Tested on     : 5 validation images (bus + truck)
+
+What worked:
+  - Clean pixel-level masks for large, well-separated vehicles.
+  - Useful for visualising exact vehicle boundaries beyond bounding boxes.
+  - Fast inference with the SAM base model.
+
+What failed / limitations:
+  - Heavily occluded vehicles: SAM merged two adjacent trucks into one mask.
+  - Small distant vehicles: mask boundaries were imprecise.
+  - SAM provides no class labels — requires YOLO detections as prompts.
+  - Not used for training metrics; YOLOv8 bounding boxes are the primary output.
+
+Conclusion:
+  SAM is valuable for annotation quality checks and visualisation,
+  but bounding-box detection is sufficient for the enforcement pipeline.
