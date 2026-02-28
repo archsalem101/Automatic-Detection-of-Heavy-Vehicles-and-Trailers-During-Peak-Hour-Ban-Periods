@@ -34,15 +34,13 @@ The intended deployment: a camera feed passes frames through the model during ba
 
 ## Class Definitions & Label Rules
 
-The dataset `data.yaml` contains **5 class entries** due to capitalisation inconsistencies introduced during annotation. These map to 3 semantic categories:
+The dataset `data.yaml` contains **3 class entries** due to capitalisation inconsistencies introduced during annotation. These map to 3 semantic categories:
 
 | Class ID | Label in data.yaml | Semantic class | Description | Label rule |
 |----------|--------------------|---------------|-------------|------------|
-| 0 | `Car` | car | Passenger car (capitalised variant) | Tight bounding box; exclude shadows |
-| 1 | `Trucks` | truck | HGV / lorry (capitalised variant) | Include cab + trailer if attached |
-| 2 | `bus` | bus | Single- or double-deck passenger bus, minibus ≥ 5m | Tight bounding box; include mirrors |
-| 3 | `car` | car | Passenger car, SUV, van < 3.5 t GVW | Tight bounding box; exclude shadows |
-| 4 | `truck` | truck | HGV, lorry, rigid or articulated; any vehicle > 3.5 t GVW | Include cab + trailer; one box per unit |
+| 1 | `bus` | bus | Single- or double-deck passenger bus, minibus ≥ 5m | Tight bounding box; include mirrors |
+| 2 | `car` | car | Passenger car, SUV, van < 3.5 t GVW | Tight bounding box; exclude shadows |
+| 3 | `truck` | truck | HGV, lorry, rigid or articulated; any vehicle > 3.5 t GVW | Include cab + trailer; one box per unit |
 
 > ⚠️ **Known labelling issue:** Classes `Car`/`car` and `Trucks`/`truck` are semantic duplicates with different capitalisation. This reduces effective training signal for heavy-vehicle classes and is a priority fix for the next dataset version (see [`/docs/error_analysis.md`](./docs/error_analysis.md)).
 
@@ -57,9 +55,9 @@ The dataset `data.yaml` contains **5 class entries** due to capitalisation incon
 | Host | GitHub (this repo) |
 | Folder | [`/images dataset/`](https://github.com/archsalem101/Automatic-Detection-of-Heavy-Vehicles-and-Trailers-During-Peak-Hour-Ban-Periods/tree/main/images%20dataset) |
 | Original source | Roboflow — Automatic Detection of Heavy Vehicles v1 |
-| Total images | 360 (train: 273 · valid: 87) |
-| Split | ~76 % train / ~24 % validation |
-| Classes | 5 labels in `data.yaml` (3 semantic classes — see note above) |
+| Total images | 439 (train: 307 · valid: 87 . Test:45) |
+| Split | ~70 % train / ~20 % validation / ~10 % Test |
+| Classes | 3 labels in `data.yaml` (3 semantic classes — see note above) |
 | Format | YOLOv8 (normalised XYWH) |
 | License | CC BY 4.0 |
 | **Dataset link** | [View dataset on GitHub](https://github.com/archsalem101/Automatic-Detection-of-Heavy-Vehicles-and-Trailers-During-Peak-Hour-Ban-Periods/tree/main/images%20dataset) |
@@ -128,8 +126,6 @@ The repo uses **two notebooks** — run them in order:
 
 | Class | Precision | Recall | mAP@0.5 | mAP@0.5:0.95 |
 |-------|-----------|--------|---------|--------------|
-| Car *(capitalised)* | 0.450 | 0.491 | 0.420 | 0.246 |
-| Trucks *(capitalised)* | 0.340 | 0.500 | 0.384 | 0.289 |
 | bus | 0.734 | 0.487 | 0.514 | 0.433 |
 | car | 0.829 | 0.779 | **0.875** | 0.641 |
 | truck | 0.811 | 0.736 | **0.812** | 0.634 |
